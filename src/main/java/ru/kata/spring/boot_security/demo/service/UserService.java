@@ -17,6 +17,9 @@ public interface UserService {
 
     User findByEmail(String email);
 
+    User loadCurrUser();
+    void setUserRoles(User user);
+
 
 
 }

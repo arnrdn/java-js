@@ -40,6 +40,7 @@ public class User implements UserDetails {
     private byte age;
 
     @Column(name = "password")
+    @NotNull
     private String password;
 
     @Column(name="roles")
@@ -48,6 +49,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     @Fetch(FetchMode.JOIN)
+    @NotNull
     private Set<Role> roles = new HashSet<>();
 
 

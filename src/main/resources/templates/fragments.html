@@ -11,10 +11,10 @@
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark" th:fragment="navbar (email, roles)">
+<nav class="navbar navbar-dark bg-dark" th:fragment="navbar(email, roles)">
     <div class="container-fluid d-flex justify-content-between">
-        <a class="navbar-brand"><span th:text="${email}"/> with roles: <span th:each="role : ${roles}"
-                                                                             th:text="${role}"/></a>
+        <a class="navbar-brand"><span class="navbar-email" th:text="${email}"/> with roles: <span th:each="role : ${roles}"
+                                                                                                            th:text="${role}"/></a>
         <a class="link-secondary text-decoration-none" href="/logout">Logout</a>
     </div>
 </nav>

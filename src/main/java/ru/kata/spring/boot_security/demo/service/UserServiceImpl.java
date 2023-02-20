@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.DAO.UserRepository;
 
 import javax.persistence.Id;
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,10 +24,12 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
 
@@ -40,8 +44,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User userDB = userRepository.findByEmail(user.getUsername());
 
         if (userDB == null) {
-            User userToSave = new User(user.getUsername(), user.getName(), user.getLastName(), user.getAge(), passwordEncoder().encode(user.getPassword()), user.getRoles());
-            userRepository.save(userToSave);
+            user.setPassword(passwordEncoder().encode(user.getPassword()));
+            setUserRoles(user);
+            userRepository.save(user);
         }
 
     }
@@ -55,6 +60,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } else {
             user.setPassword(user.getPassword());
         }
+        setUserRoles(user);
         userRepository.save(user);
     }
 
@@ -90,6 +96,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    }
+
+    @Override
+    public User loadCurrUser() {
+        Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        return findByEmail(principal.getName());
+    }
+
+    @Override
+    @Transactional
+    public void setUserRoles(User user) {
+        user.setRoles(user.getRoles().stream()
+                .map(r -> roleService.findByRole(r.getRole()))
+                .collect(Collectors.toSet()));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
