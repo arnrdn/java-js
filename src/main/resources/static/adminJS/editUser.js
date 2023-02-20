@@ -4,7 +4,6 @@ const lastNameEdit = document.getElementById('editLastName')
 const ageEdit = document.getElementById('editAge')
 const emailEdit = document.getElementById('editEmail')
 const passwordEdit = document.getElementById('editPassword')
-const rolesEdit = document.getElementById('editRoles')
 const closeEditBtn = document.getElementById('close-edit-button')
 const editModal = document.getElementById('editUser')
 
@@ -16,7 +15,6 @@ async function editUserModal(id) {
     try {
         let editReq = await fetch(userEditUrl)
         await editReq.json().then(user => {
-            console.log(user)
             idEdit.value = user.id
             nameEdit.value = user.name
             lastNameEdit.value = user.lastName

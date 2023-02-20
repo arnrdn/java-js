@@ -1,5 +1,4 @@
 const email = document.getElementsByClassName("navbar-email")
-const navRoles = document.getElementsByClassName("navbar-roles")
 const usersTable = document.getElementById("admin-tbody")
 
 const ALL_USERS_URL = '/api/admin'
@@ -48,10 +47,6 @@ async function loadUsers() {
                     </td>
                 </tr>`
     }
-
-
-    //onclick="loadEditData(${user.id})"
-    //onclick="loadDeleteData(${user.id}"
     usersTable.innerHTML = tableHtml
 }
 

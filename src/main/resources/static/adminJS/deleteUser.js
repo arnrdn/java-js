@@ -11,10 +11,7 @@ deleteModal.addEventListener('submit', deleteUser)
 
 
 async function deleteUserModal(id) {
-    console.log("DELETE CLICKED")
-    console.log("ID" + id)
     let userUrl = '/api/admin/users/' + id
-    console.log(userUrl)
 
     try {
         let deleteReq = await fetch(userUrl)
@@ -24,7 +21,6 @@ async function deleteUserModal(id) {
             lastNameDel.value = user.lastName
             ageDel.value = user.age
             emailDel.value = user.email
-            console.log(user.roles)
             let rolesHtml = ``
             user.roles.forEach(role => {
                 rolesHtml += `<option>${role.role}
